@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat  = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  CAJA
+  CLIENT
+}
+
+enum EstadoPedido {
+  PENDIENTE
+  EN_PROCESO
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+}
+
+enum EstadoCaja {
+  ABIERTA
+  CERRADA
+}
+
+enum TipoMovimiento {
+  INGRESO
+  EGRESO
+}
+
+model User {
+  id        Int   @id @default(autoincrement())
+  nombre    String
+  email     String @unique
+  password  String
+  role      Role @default(CLIENT)
+  creado    DateTime @default(now())
+  direcciones Direccion[]
+  ventas Venta[]
+  pedidos Pedido[]
+  cajas Caja[]
+
+  @@map("users")
+}
+
+model Direccion {
+  id        Int   @id @default(autoincrement())
+  calle     String
+  ciudad    String
+  pais    String
+  codigoPostal String
+  referencia String?
+  userId    Int @map("user_id")
+  pedidos Pedido[]
+  
+  user User @relation(fields: [userId], references: [id])
+  @@map("direcciones")
+}
+
+model Producto {
+  id        Int   @id @default(autoincrement())
+  nombre    String
+  precioCompra Decimal @db.Decimal(10, 2)
+  precioVenta Decimal @db.Decimal(10, 2)
+  stock     Int
+  activo    Boolean @default(true)
+  creado    DateTime @default(now())
+  categoriaId Int @map("categoria_id")
+  ventaProductos VentaProducto[]
+  pedidoProductos PedidoProducto[]
+
+  categoria Categoria @relation(fields: [categoriaId], references: [id])
+  @@map("productos")
+}
+
+model Categoria {
+  id        Int   @id @default(autoincrement())
+  nombre    String
+  descripcion String?
+  productos Producto[]
+
+  @@map("categorias")
+}
+
+model Venta {
+  id        Int   @id @default(autoincrement())
+  metodoPago String
+  total     Decimal @db.Decimal(10, 2)
+  fecha     DateTime @default(now())
+  userId   Int @map("user_id")
+  cajaId   Int @map("caja_id")
+  ventaProductos VentaProducto[]
+
+  user User @relation(fields: [userId], references: [id])
+  caja Caja @relation(fields: [cajaId], references: [id])
+  @@map("ventas")
+}
+
+model VentaProducto {
+  ventaId    Int @map("venta_id")
+  productoId Int @map("producto_id")
+  cantidad   Int
+  precioUnitario Decimal @db.Decimal(10, 2)
+  subtotal Decimal @db.Decimal(10, 2)
+
+  venta Venta @relation(fields: [ventaId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id])
+
+  @@id([ventaId, productoId])
+  @@map("venta_productos")
+}
+
+model Pedido {
+  id        Int   @id @default(autoincrement())
+  estado    EstadoPedido @default(PENDIENTE)
+  total     Decimal @db.Decimal(10, 2)
+  fecha     DateTime @default(now())
+  userId    Int @map("user_id")
+  direccionId Int @map("direccion_id")
+  pedidoProductos PedidoProducto[]
+
+  user User @relation(fields: [userId], references: [id])
+  direccion Direccion @relation(fields: [direccionId], references: [id])
+  @@map("pedidos")
+}
+
+model PedidoProducto {
+  pedidoId    Int @map("pedido_id")
+  productoId Int @map("producto_id")
+  cantidad   Int
+  precioUnitario Decimal @db.Decimal(10, 2)
+  subtotal Decimal @db.Decimal(10, 2)
+
+  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id])
+
+  @@id([pedidoId, productoId])
+  @@map("pedido_productos")
+}
+
+model Caja {
+  id        Int   @id @default(autoincrement())
+  fechaApertura DateTime @default(now())
+  montoApertura Decimal @db.Decimal(10, 2)
+  fechaCierre DateTime?
+  montoCierre Decimal? @db.Decimal(10, 2)
+  estado    EstadoCaja @default(ABIERTA)
+  usuarioId Int @map("usuario_id")
+  ventas Venta[]
+  movimientos MovimientoCaja[]
+
+  user User @relation(fields: [usuarioId], references: [id])
+  @@map("cajas")
+}
+
+model MovimientoCaja {
+  id        Int   @id @default(autoincrement())
+  tipo      TipoMovimiento
+  monto     Decimal @db.Decimal(10, 2)
+  fecha     DateTime @default(now())
+  cajaId    Int @map("caja_id")
+
+  caja Caja @relation(fields: [cajaId], references: [id])
+  @@map("movimientos_caja")
+}
