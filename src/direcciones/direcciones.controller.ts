@@ -6,12 +6,15 @@ import { CreateDireccionDto } from './dto/create-direccion.dto.js';
 import { UpdateDireccionDto } from './dto/update-direccion.dto.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @UseGuards(RolesGuard)
 @Controller('direcciones')
 export class DireccionesController {
     constructor(private readonly direccionesService:DireccionesService){}
 
+    @ApiOperation({summary:'Mostrar Direcciones'})
+    @ApiResponse({status:200, description:'Direcciones Mostradas Exitosamente'})
     @Get()
     findAll(@Req() req:ExpressRequest){
         const user = req.user as {
@@ -25,12 +28,17 @@ export class DireccionesController {
 
     }
 
+    @ApiOperation({summary:'Mostrar una Direccion'})
+    @ApiResponse({status:200, description:'Direccione Mostrada Exitosamente'})
     @Roles('ADMIN','CAJA')
     @Get(':id')
     finOne(@Param('id') id:string){
         return this.direccionesService.findOne(+id);
     }
 
+    @ApiOperation({summary:'Crear Direcciones'})
+    @ApiResponse({status:200, description:'Direccion Creada Exitosamente'})
+    @ApiResponse({status:400, description:'Direccion Formateado Incorrectamente'})
     @Post()
     @Roles('ADMIN','CLIENT')
     create(@Query('userId') userId:string, @Req() req:ExpressRequest, @Body() data:CreateDireccionDto){
@@ -50,6 +58,9 @@ export class DireccionesController {
         return this.direccionesService.create(user.userId,data);
     }
 
+    @ApiOperation({summary:'Actualizar Direcciones'})
+    @ApiResponse({status:200, description:'Direccion Aztualizada Exitosamente'})
+    @ApiResponse({status:404, description:'Direccion No Encontrada Incorrectamente'})
     @Patch(':id')
     @Roles('ADMIN','CLIENT')
     update(@Param('id') id:string, @Req() req:ExpressRequest, @Body() data:UpdateDireccionDto){
@@ -63,6 +74,9 @@ export class DireccionesController {
         return this.direccionesService.updateByUser(+id, user.userId, data);
     }
 
+    @ApiOperation({summary:'Eliminar Direcciones'})
+    @ApiResponse({status:200, description:'Direccion Eliminada Exitosamente'})
+    @ApiResponse({status:404, description:'Direccion No Encontrada'})
     @Delete(':id')
     @Roles('ADMIN','CLIENT')
     remove(@Param('id') id:string, @Req() req:ExpressRequest){

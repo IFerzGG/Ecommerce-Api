@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
 import { DireccionesModule } from './direcciones/direcciones.module.js';
+import { CajasModule } from './cajas/cajas.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -40,6 +41,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     CategoriaModule,
     AuthModule,
     DireccionesModule,
+    CajasModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, {provide:APP_GUARD, useClass:JwtAuthGuard}],

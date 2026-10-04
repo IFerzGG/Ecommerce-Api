@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { Publico } from '../auth/decorators/publico.decorator.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @UseGuards(RolesGuard)
 @Roles('ADMIN')
@@ -14,25 +15,39 @@ export class UsersController {
     constructor(private readonly userService:UsersService){}
 
     @Get()
+    @ApiOperation({summary:'Revisar Todos los Usuarios'})
+    @ApiResponse({status:200, description:'Usuarios Mostrados Exitosamente'})
     findAll(){
         return this.userService.findAll();
     }
 
     @Get(':id')
+    @ApiOperation({summary:'Revisar Un Usuario en Especifico'})
+    @ApiResponse({status:200, description:'Usuario Mostrado Exitosamente'})
     findOne(@Param('id') id:string){
         return this.userService.findOne(+id);
     }
 
+    
     @Post()
+    @ApiOperation({summary:'Crear un Usuario'})
+    @ApiResponse({status:200, description:'Usuario Creado Exitosamente'})
+    @ApiResponse({status:400, description:'Usuarios Formateado Incorrectamente'})
     create(@Body() data:CreateUserDto){
         return this.userService.create(data);
     }
 
     @Patch(':id')
+    @ApiOperation({summary:'Actualizar un Usuario'})
+    @ApiResponse({status:200, description:'Usuario Actualizado Exitosamente'})
+    @ApiResponse({status:404, description:'Usuario No Encontrado'})
     update(@Param('id') id:string, @Body() data:UpdateUserDto){
         return this.userService.update(+id,data);
     }
 
+    @ApiOperation({summary:'Eliminar un Usuario'})
+    @ApiResponse({status:200, description:'Usuario Eliminado Exitosamente'})
+    @ApiResponse({status:404, description:'Usuarios no Encontrado'})
     @Delete(':id')
     remove(@Param('id') id:string){
         return this.userService.remove(+id);
