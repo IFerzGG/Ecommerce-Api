@@ -10,7 +10,7 @@ export class ProductosService {
     async findAll(categoriaId?:string){
         return await this.prisma.producto.findMany({
             where:categoriaId
-            ?{categoriaId: Number(categoriaId),}
+            ?{categoria:{nombre:categoriaId}}
             :{},
             orderBy:{id:'asc'},
             select:{

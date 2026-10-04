@@ -1,4 +1,78 @@
-import { Controller } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { DireccionesService } from './direcciones.service.js';
+import type { Request as ExpressRequest } from 'express';
+import { Role } from '../generated/prisma/enums.js';
+import { CreateDireccionDto } from './dto/create-direccion.dto.js';
+import { UpdateDireccionDto } from './dto/update-direccion.dto.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
 
+@UseGuards(RolesGuard)
 @Controller('direcciones')
-export class DireccionesController {}
+export class DireccionesController {
+    constructor(private readonly direccionesService:DireccionesService){}
+
+    @Get()
+    findAll(@Req() req:ExpressRequest){
+        const user = req.user as {
+            userId:number;
+            role:Role;
+        }
+        if(user.role === Role.ADMIN || user.role === Role.CAJA){
+            return this.direccionesService.findAll();
+        }
+        return this.direccionesService.findByUser(user.userId);
+
+    }
+
+    @Roles('ADMIN','CAJA')
+    @Get(':id')
+    finOne(@Param('id') id:string){
+        return this.direccionesService.findOne(+id);
+    }
+
+    @Post()
+    @Roles('ADMIN','CLIENT')
+    create(@Query('userId') userId:string, @Req() req:ExpressRequest, @Body() data:CreateDireccionDto){
+        const user = req.user as {
+            userId:number;
+            role:Role;
+        }
+        if(user.role === Role.ADMIN){
+            if(!userId || isNaN(Number(userId))){
+                throw new BadRequestException('userId es Requerido y debe ser un numero')
+            }
+            return this.direccionesService.create(+userId,data);
+        }
+        if(userId){
+            throw new BadRequestException('No Tienes Permiso');
+        }
+        return this.direccionesService.create(user.userId,data);
+    }
+
+    @Patch(':id')
+    @Roles('ADMIN','CLIENT')
+    update(@Param('id') id:string, @Req() req:ExpressRequest, @Body() data:UpdateDireccionDto){
+        const user = req.user as {
+            userId:number;
+            role:Role;
+        }
+        if(user.role === Role.ADMIN){
+            return this.direccionesService.update(+id,data);
+        }
+        return this.direccionesService.updateByUser(+id, user.userId, data);
+    }
+
+    @Delete(':id')
+    @Roles('ADMIN','CLIENT')
+    remove(@Param('id') id:string, @Req() req:ExpressRequest){
+        const user = req.user as {
+            userId:number;
+            role:Role;
+        }
+        if(user.role === Role.ADMIN){
+            return this.direccionesService.remove(+id);
+        }
+        return this.direccionesService.removeByUser(+id,user.userId);
+    }
+}
