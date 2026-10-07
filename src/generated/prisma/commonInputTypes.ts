@@ -194,6 +194,23 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
+export type EnumTipoPagoFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoPago | Prisma.EnumTipoPagoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoPagoFilter<$PrismaModel> | $Enums.TipoPago
+}
+
+export type EnumTipoPagoWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoPago | Prisma.EnumTipoPagoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoPagoWithAggregatesFilter<$PrismaModel> | $Enums.TipoPago
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTipoPagoFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTipoPagoFilter<$PrismaModel>
+}
+
 export type EnumEstadoPedidoFilter<$PrismaModel = never> = {
   equals?: $Enums.EstadoPedido | Prisma.EnumEstadoPedidoFieldRefInput<$PrismaModel>
   in?: $Enums.EstadoPedido[] | Prisma.ListEnumEstadoPedidoFieldRefInput<$PrismaModel>
@@ -488,6 +505,23 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumTipoPagoFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoPago | Prisma.EnumTipoPagoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoPagoFilter<$PrismaModel> | $Enums.TipoPago
+}
+
+export type NestedEnumTipoPagoWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TipoPago | Prisma.EnumTipoPagoFieldRefInput<$PrismaModel>
+  in?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TipoPago[] | Prisma.ListEnumTipoPagoFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTipoPagoWithAggregatesFilter<$PrismaModel> | $Enums.TipoPago
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTipoPagoFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTipoPagoFilter<$PrismaModel>
 }
 
 export type NestedEnumEstadoPedidoFilter<$PrismaModel = never> = {

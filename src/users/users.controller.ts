@@ -6,8 +6,9 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { Publico } from '../auth/decorators/publico.decorator.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @UseGuards(RolesGuard)
 @Roles('ADMIN')
 @Controller('users')

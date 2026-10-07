@@ -39,7 +39,17 @@ export type EstadoCaja = (typeof EstadoCaja)[keyof typeof EstadoCaja]
 
 export const TipoMovimiento = {
   INGRESO: 'INGRESO',
-  EGRESO: 'EGRESO'
+  RETIRO: 'RETIRO',
+  APERTURA: 'APERTURA',
+  AJUSTE: 'AJUSTE'
 } as const
 
 export type TipoMovimiento = (typeof TipoMovimiento)[keyof typeof TipoMovimiento]
+
+
+export const TipoPago = {
+  EFECTIVO: 'EFECTIVO',
+  TARJETA: 'TARJETA'
+} as const
+
+export type TipoPago = (typeof TipoPago)[keyof typeof TipoPago]

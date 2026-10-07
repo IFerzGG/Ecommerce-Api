@@ -34,7 +34,14 @@ enum EstadoCaja {
 
 enum TipoMovimiento {
   INGRESO
-  EGRESO
+  RETIRO
+  APERTURA
+  AJUSTE
+}
+
+enum TipoPago {
+  EFECTIVO
+  TARJETA
 }
 
 model User {
@@ -93,7 +100,7 @@ model Categoria {
 
 model Venta {
   id        Int   @id @default(autoincrement())
-  metodoPago String
+  metodoPago TipoPago
   total     Decimal @db.Decimal(10, 2)
   fecha     DateTime @default(now())
   userId   Int @map("user_id")

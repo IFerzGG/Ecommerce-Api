@@ -1,11 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ProductosService } from './productos.service.js';
 import { CreateProductoDto } from './dto/create-producto.dto.js';
 import { UpdateProductoDto } from './dto/update-producto.dto.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import type { Request as ExpressRequest } from 'express';
+import { Role } from '../generated/prisma/enums.js';
 
+@ApiBearerAuth('JWT-auth')
 @UseGuards(RolesGuard)
 @Controller('productos')
 export class ProductosController {
@@ -14,8 +17,15 @@ export class ProductosController {
     @ApiOperation({summary:'Mostrar todos los Productos'})
     @ApiResponse({status:200, description:'Productos Mostrados Exitosamente'})
     @Get()
-    findAll(@Query('categoriaId') categoriaId?:string){
-        return this.productoService.findAll(categoriaId);
+    findAll(@Req() req:ExpressRequest, @Query('categoriaId') categoriaId?:string){
+        const user = req.user as {
+            userId:number;
+            role:Role;
+        }
+        if(user.role === Role.ADMIN || user.role === Role.CAJA){
+            return this.productoService.findAll(categoriaId);
+        }
+        return this.productoService.findAllClient(categoriaId);
     }
 
     @ApiOperation({summary:'Mostrar Un Producto'})

@@ -1431,6 +1431,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'TipoPago'
+ */
+export type EnumTipoPagoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoPago'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoPago[]'
+ */
+export type ListEnumTipoPagoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoPago[]'>
+    
+
+
+/**
  * Reference to a field of type 'EstadoPedido'
  */
 export type EnumEstadoPedidoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoPedido'>

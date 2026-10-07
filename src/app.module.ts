@@ -14,6 +14,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
 import { DireccionesModule } from './direcciones/direcciones.module.js';
 import { CajasModule } from './cajas/cajas.module.js';
+import { VentasModule } from './ventas/ventas.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -36,12 +37,13 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       serviceId: 'ecommerce-api',
     }),
     PrismaModule,
+    AuthModule,
     UsersModule,
     ProductosModule,
     CategoriaModule,
-    AuthModule,
     DireccionesModule,
     CajasModule,
+    VentasModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, {provide:APP_GUARD, useClass:JwtAuthGuard}],
