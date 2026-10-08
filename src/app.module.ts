@@ -15,6 +15,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
 import { DireccionesModule } from './direcciones/direcciones.module.js';
 import { CajasModule } from './cajas/cajas.module.js';
 import { VentasModule } from './ventas/ventas.module.js';
+import { PedidosModule } from './pedidos/pedidos.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -44,6 +45,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     DireccionesModule,
     CajasModule,
     VentasModule,
+    PedidosModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, {provide:APP_GUARD, useClass:JwtAuthGuard}],
