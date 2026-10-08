@@ -6,7 +6,7 @@ import { CreateDireccionDto } from './dto/create-direccion.dto.js';
 import { UpdateDireccionDto } from './dto/update-direccion.dto.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(RolesGuard)
@@ -40,6 +40,7 @@ export class DireccionesController {
     @ApiOperation({summary:'Crear Direcciones'})
     @ApiResponse({status:200, description:'Direccion Creada Exitosamente'})
     @ApiResponse({status:400, description:'Direccion Formateado Incorrectamente'})
+    @ApiQuery({name:'userId', required:false, type:Number})
     @Post()
     @Roles('ADMIN','CLIENT')
     create(@Query('userId') userId:string, @Req() req:ExpressRequest, @Body() data:CreateDireccionDto){

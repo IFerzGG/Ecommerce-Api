@@ -4,6 +4,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard.js';
 import type { Request as ExpressRequest } from "express";
 import { RegisterAuthDto } from './dto/register.dto.js';
 import { Publico } from './decorators/publico.decorator.js';
+import { LoginAuthDto } from './dto/login.dto.js';
 
 @Controller('auth')
 export class AuthController {
@@ -13,7 +14,7 @@ export class AuthController {
     @Publico()
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Request() req: ExpressRequest){
+    async login(@Request() req: ExpressRequest, @Body() data:LoginAuthDto){
         return this.authService.login(req.user);
     }
 

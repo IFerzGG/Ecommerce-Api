@@ -20,7 +20,7 @@ export class VentasService {
                 userId,
             },
             orderBy:{id:'asc'},
-            include:{user:{select:{nombre:true}}},
+            include:{user:{select:{nombre:true}}, ventaProductos:true,},
         });
     }
 

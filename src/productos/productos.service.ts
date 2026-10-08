@@ -8,11 +8,14 @@ import { Role } from '../generated/prisma/enums.js';
 export class ProductosService {
     constructor(private readonly prisma:PrismaService){}
 
-    async findAll(categoriaId?:string){
+    async findAll(categoriaId?:string, page = 1, limit = 10){
+        const skip = (page - 1)* limit
         return await this.prisma.producto.findMany({
             where:categoriaId
             ?{categoria:{nombre:categoriaId}}
             :{},
+            skip,
+            take:limit,
             orderBy:{id:'asc'},
             select:{
                 id:true,
@@ -28,7 +31,8 @@ export class ProductosService {
         });
     }
 
-    async findAllClient(categoriaId?:string){
+    async findAllClient(categoriaId?:string, page = 1, limit = 10){
+        const skip = (page - 1)* limit
         return await this.prisma.producto.findMany({
             where: {
                 activo: true,
@@ -38,6 +42,8 @@ export class ProductosService {
                     },
                 }),
             },
+            skip,
+            take:limit,
             orderBy:{id:'asc'},
             select:{
                 id:true,

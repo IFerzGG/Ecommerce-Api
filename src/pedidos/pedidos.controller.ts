@@ -28,7 +28,7 @@ export class PedidosController {
         return this.pedidosService.findAll();
     }
 
-    @Roles('ADMIN','CAJA')
+    @Roles('ADMIN','CLIENT')
     @Get(':id')
     @ApiOperation({summary:'Mostrar El Pedido'})
     @ApiResponse({status:200, description:'Pedidido Mostrado Exitosamente'})
@@ -48,7 +48,7 @@ export class PedidosController {
         return this.pedidosService.create(user.userId, data);
     }
 
-    @Roles('ADMIN')
+    @Roles('ADMIN','CLIENT')
     @Patch(':id')
     @ApiOperation({summary:'Actualizar Estado del Pedido'})
     @ApiResponse({status:200, description:'Pedidido Actualizado Exitosamente'})

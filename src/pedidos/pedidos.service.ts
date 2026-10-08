@@ -33,8 +33,8 @@ export class PedidosService {
 
     async create(userId:number, data:CreatePedidoDto){
         return this.prisma.$transaction(async (tx) => {
-            const direccion = tx.direccion.findUnique({
-                where:{id:data.direccionId},
+            const direccion = await tx.direccion.findUnique({
+                where:{id:data.direccionId, userId},
             });
             if(!direccion)throw new NotFoundException('Direccion No Encontrada');
     //=============================================================================================================================================================
@@ -103,9 +103,9 @@ export class PedidosService {
                 })),
             });
      //===================================================================================================================================
-            return tx.venta.findUnique({
+            return tx.pedido.findUnique({
                 where:{id:pedido.id},
-                include:{ventaProductos:true,},
+                include:{pedidoProductos:true,},
             });       
         });
     }

@@ -4,7 +4,7 @@ import { CreateProductoDto } from './dto/create-producto.dto.js';
 import { UpdateProductoDto } from './dto/update-producto.dto.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import type { Request as ExpressRequest } from 'express';
 import { Role } from '../generated/prisma/enums.js';
 
@@ -16,16 +16,19 @@ export class ProductosController {
 
     @ApiOperation({summary:'Mostrar todos los Productos'})
     @ApiResponse({status:200, description:'Productos Mostrados Exitosamente'})
+    @ApiQuery({name:'categoriaId', required:false, type:String})
+    @ApiQuery({name:'page', required:false, type:Number})
+    @ApiQuery({name:'limit', required:false, type:Number})
     @Get()
-    findAll(@Req() req:ExpressRequest, @Query('categoriaId') categoriaId?:string){
+    findAll(@Req() req:ExpressRequest, @Query('categoriaId') categoriaId?:string, @Query('page') page='1', @Query('limit') limit='10'){
         const user = req.user as {
             userId:number;
             role:Role;
         }
         if(user.role === Role.ADMIN || user.role === Role.CAJA){
-            return this.productoService.findAll(categoriaId);
+            return this.productoService.findAll(categoriaId, +page, +limit);
         }
-        return this.productoService.findAllClient(categoriaId);
+        return this.productoService.findAllClient(categoriaId, +page, +limit);
     }
 
     @ApiOperation({summary:'Mostrar Un Producto'})

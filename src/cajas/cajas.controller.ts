@@ -8,7 +8,7 @@ import { Role } from '../generated/prisma/enums.js';
 import { CreateCajaDto } from './dto/create-caja.dto.js';
 import { MovimientoCajaDto } from './dto/movimientoCaja.dto.js';
 import { UpdateCajaDto, UpdateMovCajaDto } from './dto/update-caja.dto.js';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(RolesGuard)
@@ -53,6 +53,7 @@ export class CajasController {
     @ApiOperation({summary:'Crear Cajas'})
     @ApiResponse({status:200, description:'Caja Creada Exitosamente'})
     @ApiResponse({status:400, description:'Caja Mal Formateada'})
+    @ApiQuery({name:'usuarioId', required:false, type:Number})
     @Roles('ADMIN','CAJA')
     @Post()
     create(@Query('usuarioId') usuarioId:string, @Req() req:ExpressRequest, @Body() data:CreateCajaDto){
