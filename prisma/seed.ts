@@ -4,53 +4,69 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../src/generated/prisma/client.js';
 import { Pool } from 'pg';
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-async function main(){
-    console.log('==========================================');
-    console.log('INICIANDO SEED DE PRUEBAS');
-    console.log('==========================================');
-    const passwordHash = await bcrypt.hash('Password123!', 10);
+async function main() {
+  console.log('==========================================');
+  console.log('INICIANDO SEED DE PRUEBAS');
+  console.log('==========================================');
 
-    const admin = await prisma.user.create({
-        data:{
-            nombre:'ADMIN',
-            email:'admin@tienda.com',
-            password:passwordHash,
-            role:'ADMIN',
-        },
-    });
+  const passwordHash = await bcrypt.hash('Password123!', 10);
 
-    const caja = await prisma.user.create({
-        data:{
-            nombre:'CAJA',
-            email:'caja@tienda.com',
-            password:passwordHash,
-            role:'CAJA',
-        },
-    });
+  const admin = await prisma.user.upsert({
+    where: {
+      email: 'admin@tienda.com',
+    },
+    update: {},
+    create: {
+      nombre: 'ADMIN',
+      email: 'admin@tienda.com',
+      password: passwordHash,
+      role: 'ADMIN',
+    },
+  });
 
-    const cliente = await prisma.user.create({
-        data:{
-            nombre:'CLIENTE',
-            email:'cliente@tienda.com',
-            password:passwordHash,
-            role:'CLIENT',
-        },
-    });
+  const caja = await prisma.user.upsert({
+    where: {
+      email: 'caja@tienda.com',
+    },
+    update: {},
+    create: {
+      nombre: 'CAJA',
+      email: 'caja@tienda.com',
+      password: passwordHash,
+      role: 'CAJA',
+    },
+  });
 
-    console.log('✅ Seed terminado');
+  const cliente = await prisma.user.upsert({
+    where: {
+      email: 'cliente@tienda.com',
+    },
+    update: {},
+    create: {
+      nombre: 'CLIENTE',
+      email: 'cliente@tienda.com',
+      password: passwordHash,
+      role: 'CLIENT',
+    },
+  });
+
+  console.log('✅ Seed terminado');
 }
 
 main()
-    .catch((error) => {
-        console.error('');
-        console.error('ERROR EJECUTANDO EL SEED:', error);
-        process.exit(1);
-    })
-    .finally(async() => {
-        await prisma.$disconnect();
-        await pool.end();
-    });
+  .catch((error) => {
+    console.error('');
+    console.error('ERROR EJECUTANDO EL SEED:', error);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+    await pool.end();
+  });
